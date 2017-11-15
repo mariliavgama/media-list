@@ -1,0 +1,66 @@
+package com.example.mariliavgama.medialist.items;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
+import com.example.mariliavgama.medialist.R;
+import com.example.mariliavgama.medialist.data.source.ItemsRepository;
+import com.example.mariliavgama.medialist.data.source.local.ItemsLocalDataSource;
+import com.example.mariliavgama.medialist.data.source.local.ListAppDatabase;
+import com.example.mariliavgama.medialist.data.source.remote.ItemsRemoteDataSource;
+import com.example.mariliavgama.medialist.util.AppExecutors;
+
+/**
+ * Architecture style based on: https://github.com/googlesamples/android-architecture
+ * This is an Activity which creates fragments and presenters.
+ */
+
+public class ItemsActivity extends AppCompatActivity {
+    private static int DELAY_TO_LOAD_NEW_ITEMS = 60000;
+
+    private ItemsPresenter mItemsPresenter;
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.items_act);
+
+        // Set up the toolbar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ItemsFragment itemsFragment =
+                (ItemsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (itemsFragment == null) {
+            // Create the fragment
+            itemsFragment = ItemsFragment.newInstance();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.contentFrame, itemsFragment);
+            transaction.commit();
+        }
+
+        // TODO: Use dependency injection instead of creating a new instance of repository
+        ListAppDatabase database = ListAppDatabase.getInstance(getApplicationContext());
+
+        ItemsRepository repository = ItemsRepository.getInstance(ItemsRemoteDataSource.getInstance(),
+                ItemsLocalDataSource.getInstance(new AppExecutors(),
+                        database.itemDao()));
+
+        // Create the presenter
+        mItemsPresenter = new ItemsPresenter(repository, itemsFragment);
+
+        // Set alarm to load items from time to time
+        Intent alarmIntent = new Intent(this, ItemsAlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), DELAY_TO_LOAD_NEW_ITEMS, pendingIntent);
+    }
+}

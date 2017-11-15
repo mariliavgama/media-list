@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Media List</string>
+    <string name="app_name">Media List App</string>
+    <string name="items_show_success">Showing items</string>
+    <string name="items_show_error">Unable to load new items</string>
 </resources>
