@@ -15,6 +15,9 @@ import com.example.mariliavgama.medialist.data.source.local.ItemsLocalDataSource
 import com.example.mariliavgama.medialist.data.source.local.ListAppDatabase;
 import com.example.mariliavgama.medialist.data.source.remote.ItemsRemoteDataSource;
 import com.example.mariliavgama.medialist.util.AppExecutors;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * Architecture style based on: https://github.com/googlesamples/android-architecture
@@ -33,8 +36,25 @@ public class ItemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.items_act);
 
+        // Create default options which will be used for every
+        //  displayImage(...) call if no options will be passed to this method
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                // Cache is not available by default, so set it here.
+                .cacheInMemory(true)
+                // Add this if would like to cache on SD Card:
+                ///.cacheOnDisk(true)
+                .build();
+
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+
+        ImageLoader.getInstance().init(config); // Has to be done on Application start
+
         // Set up the toolbar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ItemsFragment itemsFragment =

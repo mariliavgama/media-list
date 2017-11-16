@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 /**
  * Global executor pools for the whole application.
  * <p>
- * Grouping itemd like this avoids the effects of item starvation (e.g. disk reads don't wait behind
+ * Grouping items like this avoids the effects of item starvation (e.g. disk reads don't wait behind
  * webservice requests).
  */
 public class AppExecutors {

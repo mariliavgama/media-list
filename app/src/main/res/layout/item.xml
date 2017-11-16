@@ -1,23 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/item_title"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="@dimen/card_corner_radius"
+    card_view:cardElevation="@dimen/list_item_margin_big">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/title_font_size"
-        android:layout_marginStart="@dimen/list_item_margin_big"
-        android:layout_marginLeft="@dimen/list_item_margin_big"
-        android:layout_marginTop="@dimen/list_item_margin_small"
-        android:textStyle="bold"/>
-    <TextView
-        android:id="@+id/item_byline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/byline_font_size"
-        android:layout_marginStart="@dimen/list_item_margin_big"
-        android:layout_marginLeft="@dimen/list_item_margin_big"
-        android:layout_marginTop="@dimen/list_item_margin_medium"
-        android:layout_marginBottom="@dimen/list_item_margin_small"/>
-</LinearLayout>
+        android:layout_margin="@dimen/list_item_padding">
+        <TextView
+            android:id="@+id/item_headline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/list_item_margin_medium"
+            android:textSize="@dimen/font_size_big"
+            android:textStyle="bold"/>
+        <ImageView
+            android:id="@+id/item_multimedia"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="@dimen/list_item_margin_small"
+            android:layout_marginEnd="@dimen/list_item_margin_medium"
+            android:scaleType="centerCrop"
+            android:layout_below="@+id/item_headline"
+            android:contentDescription="@string/image_content_description"/>
+        <TextView
+            android:id="@+id/item_summary_short"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_headline"
+            android:layout_toRightOf="@+id/item_multimedia"
+            android:layout_toEndOf="@+id/item_multimedia"
+            android:textSize="@dimen/font_size_big"/>
+        <TextView
+            android:id="@+id/item_byline_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_summary_short"
+            android:layout_toRightOf="@+id/item_multimedia"
+            android:layout_toEndOf="@+id/item_multimedia"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/font_size_medium"/>
+        <TextView
+            android:id="@+id/item_title_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_byline_date"
+            android:layout_toRightOf="@+id/item_multimedia"
+            android:layout_toEndOf="@+id/item_multimedia"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/font_size_small"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
+
+<!--
+/*
+  headline -
+  summary_short -
+  byline (reviewer) -
+  publication_date -
+  multimedia -
+  
+  display_title (movie title)
+  mpaa_rating (movie rating)
+  
+  
+
+ */
+-->

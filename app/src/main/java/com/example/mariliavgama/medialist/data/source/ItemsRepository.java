@@ -138,7 +138,7 @@ public class ItemsRepository implements ItemsDataSource {
         }
         mCachedItems.clear();
         for (Item item : items) {
-            mCachedItems.put(item.getId(), item);
+            mCachedItems.put(item.getDisplayTitle(), item);
         }
         mCacheIsDirty = false;
     }
@@ -159,6 +159,6 @@ public class ItemsRepository implements ItemsDataSource {
         if (mCachedItems == null) {
             mCachedItems = new LinkedHashMap<>();
         }
-        mCachedItems.put(item.getId(), item);
+        mCachedItems.put(item.getDisplayTitle(), item);
     }
 }

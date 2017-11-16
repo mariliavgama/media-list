@@ -44,7 +44,7 @@ ext {
     retrofit2Version = "2.0.2"
     rxjavaVersion = '2.1.3'
     rxandroidVersion = '2.0.1'
-    butterKnifeVersion = '8.8.1'
     mockitoVersion = '1.10.19'
     hamcrestVersion = '1.3'
+    universalImageLoaderVersion = '1.9.5'
 }

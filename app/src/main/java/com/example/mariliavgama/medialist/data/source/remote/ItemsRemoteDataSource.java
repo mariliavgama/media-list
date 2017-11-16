@@ -24,8 +24,6 @@ public class ItemsRemoteDataSource implements ItemsDataSource {
 
     private static ItemsRemoteDataSource INSTANCE;
 
-    private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
-
     private final static Map<String, Item> ITEMS_SERVICE_DATA;
 
     static {
@@ -42,9 +40,13 @@ public class ItemsRemoteDataSource implements ItemsDataSource {
     // Prevent direct instantiation.
     private ItemsRemoteDataSource() {}
 
-    private static void addItem(String title, String byLine) {
-        Item newItem = new Item(title, byLine);
-        ITEMS_SERVICE_DATA.put(newItem.getId(), newItem);
+    private static void addItem(String headline, String summaryShort,
+                                String byLine, String publicationDate,
+                                String multimediaSrc, String displayTitle,
+                                String mppaRating) {
+        Item newItem = new Item(headline, summaryShort, byLine, publicationDate, multimediaSrc,
+                displayTitle, mppaRating);
+        ITEMS_SERVICE_DATA.put(newItem.getDisplayTitle(), newItem);
     }
 
     @Override
@@ -64,7 +66,8 @@ public class ItemsRemoteDataSource implements ItemsDataSource {
 
                 for (int i = 0; i < results.size(); i++) {
                     Result r = results.get(i);
-                    addItem(r.getDisplayTitle(), r.getByline());
+                    addItem(r.getHeadline(), r.getSummaryShort(), r.getByline(), r.getPublicationDate(),
+                            r.getMultimedia().getSrc(), r.getDisplayTitle(), r.getMpaaRating());
                 }
                 items.addAll(ITEMS_SERVICE_DATA.values());
                 callback.onItemsLoaded(items);
@@ -79,7 +82,7 @@ public class ItemsRemoteDataSource implements ItemsDataSource {
 
     @Override
     public void saveItem(@NonNull Item item) {
-        ITEMS_SERVICE_DATA.put(item.getId(), item);
+        ITEMS_SERVICE_DATA.put(item.getDisplayTitle(), item);
     }
 
     @Override

@@ -2,4 +2,7 @@
     <string name="app_name">Media List App</string>
     <string name="items_show_success">Showing items</string>
     <string name="items_show_error">Unable to load new items</string>
+    <string name="image_content_description">image</string>
+    <string name="byline_date">By %s - %s</string>
+    <string name="rating">" - Rating %s"</string>
 </resources>

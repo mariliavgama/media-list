@@ -1,28 +1,30 @@
 package com.example.mariliavgama.medialist.items;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mariliavgama.medialist.R;
 import com.example.mariliavgama.medialist.data.Item;
+import com.example.mariliavgama.medialist.util.DateTimeUtils;
+import com.example.mariliavgama.medialist.util.LayoutUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Architecture style based on: https://github.com/googlesamples/android-architecture
@@ -65,12 +67,14 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
         View root = inflater.inflate(R.layout.items_frag, container, false);
 
         // Set up items view
-        ListView listView = (ListView) root.findViewById(R.id.items_list);
-        listView.setAdapter(mListAdapter);
+        RecyclerView recyclerView = root.findViewById(R.id.items_list);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new SpacesItemDecoration());
+        recyclerView.setAdapter(mListAdapter);
 
         // Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_refresh);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab_refresh);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,14 +104,14 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
         Toast.makeText(activity, R.string.items_show_error, Toast.LENGTH_SHORT).show();
     }
 
-    static class ItemsAdapter extends BaseAdapter {
+    static class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private List<Item> mItems;
 
-        public ItemsAdapter(List<Item> items) {
+        ItemsAdapter(List<Item> items) {
             setList(items);
         }
 
-        public void replaceData(List<Item> items) {
+        void replaceData(List<Item> items) {
             setList(items);
             notifyDataSetChanged();
         }
@@ -117,47 +121,83 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
         }
 
         @Override
-        public int getCount() {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            final View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+            return new ItemViewHolder(view);
+        }
+
+        //
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            ((ItemViewHolder) holder).bindData(mItems.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
             return mItems.size();
         }
 
         @Override
-        public Item getItem(int i) {
-            return mItems.get(i);
+        public int getItemViewType(final int position) {
+            return R.layout.item;
+        }
+    }
+
+    static class ItemViewHolder extends RecyclerView.ViewHolder {
+        private Context context;
+        private TextView headline;
+        private ImageView multimedia;
+        private TextView summaryShort;
+        private TextView byLineDate;
+        private TextView titleRating;
+
+        ItemViewHolder(final View itemView) {
+            super(itemView);
+            context = itemView.getContext();
+            headline = itemView.findViewById(R.id.item_headline);
+            multimedia = itemView.findViewById(R.id.item_multimedia);
+            summaryShort = itemView.findViewById(R.id.item_summary_short);
+            byLineDate = itemView.findViewById(R.id.item_byline_date);
+            titleRating = itemView.findViewById(R.id.item_title_rating);
         }
 
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
+        void bindData(final Item item) {
+            headline.setText(item.getHeadline());
 
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            View rowView = view;
-            ViewHolder holder;
+            multimedia.setContentDescription(item.getHeadline());
+            // Default options set on Activity onCreate will be used in all calls to displayImage
+            ImageLoader.getInstance().displayImage(item.getMultimediaSrc(), multimedia);
 
-            if (rowView != null) {
-                holder = (ViewHolder) rowView.getTag();
-            } else {
-                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                rowView = inflater.inflate(R.layout.item, viewGroup, false);
-                holder = new ViewHolder(rowView);
-                rowView.setTag(holder);
+            summaryShort.setText(item.getSummaryShort());
+            if (context == null) {
+                return;
             }
-
-            final Item item = getItem(i);
-            holder.title.setText(item.getTitle());
-            holder.byLine.setText(item.getByLine());
-
-            return rowView;
+            byLineDate.setText(String.format(context.getString(R.string.byline_date),
+                    item.getByLine(), DateTimeUtils.getDate(item.getPublicationDate())));
+            titleRating.setText(getTitleRating(item));
         }
 
-        static class ViewHolder {
-            @BindView(R.id.item_title) TextView title;
-            @BindView(R.id.item_byline) TextView byLine;
+        String getTitleRating(Item item) {
+            String rating = "".equals(item.getMppaRating()) ? "" :
+                    String.format(context.getString(R.string.rating), item.getMppaRating());
+            return item.getDisplayTitle() + rating;
+        }
+    }
 
-            public ViewHolder(View view) {
-                ButterKnife.bind(this, view);
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private int SPACE = LayoutUtils.DPToPixels(5);
+
+        public SpacesItemDecoration() {}
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.left = SPACE;
+            outRect.right = SPACE;
+            outRect.bottom = SPACE;
+
+            // Add top margin only for the first item to avoid double space between items
+            if(parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = SPACE;
             }
         }
     }

@@ -25,23 +25,20 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "com.android.support.test:runner:$rootProject.testRunnerVersion"
-    //androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    //compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
 
-    //compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
     compile "android.arch.persistence.room:runtime:$rootProject.roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
-    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+    compile "com.nostra13.universalimageloader:universal-image-loader:$rootProject.universalImageLoaderVersion"
 
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
