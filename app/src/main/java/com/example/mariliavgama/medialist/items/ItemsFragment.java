@@ -190,7 +190,7 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
         private Drawable mDivider;
 
         public SimpleDividerItemDecoration(Context context) {
-            mDivider = context.getResources().getDrawable(R.drawable.list_divider);
+            mDivider = context.getResources().getDrawable(android.R.drawable.divider_horizontal_bright);
         }
 
         @Override
