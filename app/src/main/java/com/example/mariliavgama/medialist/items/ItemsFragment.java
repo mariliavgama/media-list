@@ -2,7 +2,9 @@ package com.example.mariliavgama.medialist.items;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -68,14 +70,16 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
 
         // Set up items view
         RecyclerView recyclerView = root.findViewById(R.id.items_list);
-        Context context = container.getContext();
-        if (context != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.addItemDecoration(new SpacesItemDecoration());
-            recyclerView.setAdapter(mListAdapter);
+        // only retain a weak reference to the activity
+        ItemsActivity activity = ItemsActivity.wrActivity.get();
+        if (activity == null) {
+            return null;
         }
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(activity));
+        recyclerView.setAdapter(mListAdapter);
         // Set up floating action button
-        FloatingActionButton fab = root.findViewById(R.id.fab_refresh);
+        FloatingActionButton fab = activity.findViewById(R.id.fab_refresh);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,20 +189,29 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
         }
     }
 
-    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private int SPACE = LayoutUtils.DPToPixels(5);
+    public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+        private Drawable mDivider;
 
-        SpacesItemDecoration() {}
+        public SimpleDividerItemDecoration(Context context) {
+            mDivider = context.getResources().getDrawable(R.drawable.list_divider);
+        }
 
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.left = SPACE;
-            outRect.right = SPACE;
-            outRect.bottom = SPACE;
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
 
-            // Add top margin only for the first item to avoid double space between items
-            if(parent.getChildAdapterPosition(view) == 0) {
-                outRect.top = SPACE;
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
             }
         }
     }

@@ -14,7 +14,6 @@
     <dimen name="list_item_margin_big">13dp</dimen>
     <dimen name="font_size_big">14sp</dimen>
     <dimen name="font_size_medium">12sp</dimen>
-    <dimen name="card_corner_radius">6dp</dimen>
     <dimen name="font_size_small">11sp</dimen>
 
 </resources>

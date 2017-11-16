@@ -19,6 +19,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Architecture style based on: https://github.com/googlesamples/android-architecture
  * This is an Activity which creates fragments and presenters.
@@ -26,12 +28,14 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class ItemsActivity extends AppCompatActivity {
 
+    static WeakReference<ItemsActivity> wrActivity;
     private ItemsPresenter mItemsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.items_act);
+        wrActivity = new WeakReference<>(this);
 
         // Create default options which will be used for every
         //  displayImage(...) call if no options will be passed to this method
