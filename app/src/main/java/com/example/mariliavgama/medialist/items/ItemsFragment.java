@@ -1,6 +1,5 @@
 package com.example.mariliavgama.medialist.items;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -68,14 +67,17 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
 
         // Set up items view
         RecyclerView recyclerView = root.findViewById(R.id.items_list);
-        Context context = container.getContext();
-        if (context != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.addItemDecoration(new SpacesItemDecoration());
-            recyclerView.setAdapter(mListAdapter);
+        // only retain a weak reference to the activity
+        ItemsActivity activity = ItemsActivity.wrActivity.get();
+        if (activity == null) {
+            return null;
         }
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.addItemDecoration(new SpacesItemDecoration());
+        recyclerView.setAdapter(mListAdapter);
+
         // Set up floating action button
-        FloatingActionButton fab = root.findViewById(R.id.fab_refresh);
+        FloatingActionButton fab = activity.findViewById(R.id.fab_refresh);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

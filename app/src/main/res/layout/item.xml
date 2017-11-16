@@ -19,8 +19,8 @@
             android:textStyle="bold"/>
         <ImageView
             android:id="@+id/item_multimedia"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
             android:layout_marginRight="@dimen/list_item_margin_small"
             android:layout_marginEnd="@dimen/list_item_margin_medium"
             android:scaleType="centerCrop"
