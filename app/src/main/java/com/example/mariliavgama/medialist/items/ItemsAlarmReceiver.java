@@ -8,7 +8,7 @@ public class ItemsAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // For our recurring task, refresh items
+        // For the recurring task to refresh items
         // Only retain a weak reference to the presenter
         if (ItemsPresenter.wrPresenter == null) {
             return;

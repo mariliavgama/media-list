@@ -29,13 +29,12 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ItemsPresenter implements ItemsContract.Presenter {
 
-    private static int SECONDS_BEFORE_LOADING_ITEMS = 3;
     private final ItemsRepository mItemsRepository;
     @Nullable
     private ItemsContract.View mItemsView;
     static WeakReference<ItemsPresenter> wrPresenter;
 
-    public ItemsPresenter(@NonNull ItemsRepository itemsRepository, @NonNull ItemsContract.View itemsView) {
+    ItemsPresenter(@NonNull ItemsRepository itemsRepository, @NonNull ItemsContract.View itemsView) {
         mItemsRepository = itemsRepository;
         mItemsView = itemsView;
         mItemsView.setPresenter(this);
@@ -47,7 +46,7 @@ public class ItemsPresenter implements ItemsContract.Presenter {
         loadItems();
     }
 
-    public void loadItems() {
+    void loadItems() {
         mItemsRepository.getItems(new ItemsDataSource.LoadItemsCallback() {
             @Override
             public void onItemsLoaded(List<Item> items) {
@@ -69,6 +68,9 @@ public class ItemsPresenter implements ItemsContract.Presenter {
     }
 
     private void processItems(List<Item> items) {
+        if (mItemsView == null) {
+            return;
+        }
         if (items.isEmpty()) {
             mItemsView.showLoadingItemsError();
         } else {
@@ -102,7 +104,8 @@ public class ItemsPresenter implements ItemsContract.Presenter {
     }
 
     private Observable<? extends Long> getObservable() {
-        return Observable.timer(SECONDS_BEFORE_LOADING_ITEMS, TimeUnit.SECONDS);
+        int secondsToLoadItems = 1;
+        return Observable.timer(secondsToLoadItems, TimeUnit.SECONDS);
     }
 
     private Observer<Long> getObserver() {

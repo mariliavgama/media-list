@@ -1,7 +1,5 @@
 package com.example.mariliavgama.medialist.items;
 
-import android.util.Log;
-
 import com.example.mariliavgama.medialist.data.Item;
 import com.example.mariliavgama.medialist.data.source.ItemsDataSource;
 import com.example.mariliavgama.medialist.data.source.ItemsRepository;

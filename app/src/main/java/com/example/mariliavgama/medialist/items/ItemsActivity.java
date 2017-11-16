@@ -25,11 +25,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  */
 
 public class ItemsActivity extends AppCompatActivity {
-    private static int DELAY_TO_LOAD_NEW_ITEMS = 60000;
 
     private ItemsPresenter mItemsPresenter;
-    private PendingIntent pendingIntent;
-    private AlarmManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +74,21 @@ public class ItemsActivity extends AppCompatActivity {
         // Create the presenter
         mItemsPresenter = new ItemsPresenter(repository, itemsFragment);
 
-        // Set alarm to load items from time to time
+        setAlarmToLoadItems();
+    }
+
+    /*
+    * Set alarm to load items from time to time.
+    * For this prototype, new items are being loaded every 60 seconds but that can be set to be less
+    * frequent.
+     */
+    private void setAlarmToLoadItems() {
         Intent alarmIntent = new Intent(this, ItemsAlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), DELAY_TO_LOAD_NEW_ITEMS, pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int delayToLoadItems = 60000;
+        if (manager != null) {
+            manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), delayToLoadItems, pendingIntent);
+        }
     }
 }

@@ -68,13 +68,14 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
 
         // Set up items view
         RecyclerView recyclerView = root.findViewById(R.id.items_list);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new SpacesItemDecoration());
-        recyclerView.setAdapter(mListAdapter);
-
+        Context context = container.getContext();
+        if (context != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.addItemDecoration(new SpacesItemDecoration());
+            recyclerView.setAdapter(mListAdapter);
+        }
         // Set up floating action button
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab_refresh);
+        FloatingActionButton fab = root.findViewById(R.id.fab_refresh);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,20 +89,20 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
     @Override
     public void showItems(List<Item> items) {
         mListAdapter.replaceData(items);
-        Activity activity = getActivity();
-        if (activity == null || activity.isFinishing()) {
+        Context context = getContext();
+        if (context == null) {
             return;
         }
-        Toast.makeText(activity, R.string.items_show_success, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.items_show_success, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showLoadingItemsError() {
-        Activity activity = getActivity();
-        if (activity == null || activity.isFinishing()) {
+        Context context = getContext();
+        if (context == null) {
             return;
         }
-        Toast.makeText(activity, R.string.items_show_error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.items_show_error, Toast.LENGTH_SHORT).show();
     }
 
     static class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -187,7 +188,7 @@ public class ItemsFragment extends Fragment implements ItemsContract.View {
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         private int SPACE = LayoutUtils.DPToPixels(5);
 
-        public SpacesItemDecoration() {}
+        SpacesItemDecoration() {}
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
