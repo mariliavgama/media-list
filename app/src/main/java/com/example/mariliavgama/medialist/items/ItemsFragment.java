@@ -1,9 +1,7 @@
 package com.example.mariliavgama.medialist.items;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 import com.example.mariliavgama.medialist.R;
 import com.example.mariliavgama.medialist.data.Item;
 import com.example.mariliavgama.medialist.util.DateTimeUtils;
-import com.example.mariliavgama.medialist.util.LayoutUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
