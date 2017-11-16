@@ -28,7 +28,7 @@ import java.lang.ref.WeakReference;
 
 public class ItemsActivity extends AppCompatActivity {
 
-    static WeakReference<ItemsActivity> wrActivity;
+    static WeakReference<ItemsActivity> wrActivity = new WeakReference<>(null);
     private ItemsPresenter mItemsPresenter;
 
     @Override
