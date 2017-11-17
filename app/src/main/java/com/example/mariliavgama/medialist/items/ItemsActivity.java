@@ -43,7 +43,7 @@ public class ItemsActivity extends AppCompatActivity {
                 // Cache is not available by default, so set it here.
                 .cacheInMemory(true)
                 // Add this if would like to cache on SD Card:
-                ///.cacheOnDisk(true)
+                //.cacheOnDisk(true)
                 .build();
 
 
